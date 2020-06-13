@@ -1,0 +1,17 @@
+{
+  "name": "rest_api_server",
+  "version": "1.0.0",
+  "description": "REST api server for banda pixels",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "express"
+  ],
+  "author": "Evgeny Moskalov",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

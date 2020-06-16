@@ -1,6 +1,9 @@
 module.exports.signin = (req, res) => {
   res.status(200).json({
-    signin: 'signin from controller'
+    signin: {
+      id: req.body.id,
+      password: req.body.password
+    }
   })
 }
 

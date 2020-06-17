@@ -1,5 +1,8 @@
+const mongoose = require('mongoose')
+const Users = mongoose.model('users')
 module.exports.info = (req, res) => {
   res.status(200).json({
-    info: 'info from controller'
+    id: req.user.id,
+    idType: req.user.idType
   })
 }

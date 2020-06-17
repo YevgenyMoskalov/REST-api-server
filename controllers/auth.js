@@ -3,8 +3,8 @@ const jsToken = require('jsonwebtoken')
 const User = require('../models/User')
 const jsonWebToken = require('../config/jwt')
 const TOKEN_LIFETIME = 10 * 60  //10 min
-const regexpEmail = /.+@.+\..+/;
-const regexpPhone = /^\+?\d{12}$/;
+const regexpEmail = /.+@.+\..+/;    //???
+const regexpPhone = /^\+?\d{12}$/;  //???
 
 //HTTP work codes from the site https://httpstatuses.com/
 module.exports.signin = async function(req, res) {
@@ -12,9 +12,7 @@ module.exports.signin = async function(req, res) {
   if (user){
     const pasResult = bcrypt.compareSync(req.body.password, user.password)
     if (pasResult) {
-      const token = jsToken.sign({
-        id: user.id
-      }, jsonWebToken.jwt, {expiresIn: TOKEN_LIFETIME})
+      const token = genWebToken(user)
       res.status(200).json({
         token: `Bearer ${token}`
       })
@@ -48,9 +46,11 @@ module.exports.signup = async function(req, res) {
 
       try {
         await user.save()
+        const token = genWebToken(user)
         res.status(201).json({
-          message: `user created ${user}`
+          token: `Bearer ${token}`
         })
+
       } catch (e) {
         // error 500 Internal Server Error
         res.status(500).json({
@@ -68,4 +68,10 @@ module.exports.signup = async function(req, res) {
 
 function isValidId(id) {
   return regexpEmail.test(id) || regexpPhone.test(id)
+}
+
+function genWebToken(user) {
+  return jsToken.sign({
+    id: user.id,
+  }, jsonWebToken.jwt, {expiresIn: TOKEN_LIFETIME})
 }

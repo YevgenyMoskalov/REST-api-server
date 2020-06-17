@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
+const passport = require('passport')
 const authRoutes = require('./routes/auth')
 const infoRoute = require('./routes/info')
 const latencyRoute = require('./routes/latency')
@@ -11,6 +12,9 @@ const app = express()
 mongoose.connect(db.MONGO_URI, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected!'))
   .catch(error => console.log(error))
+
+app.use(passport.initialize())
+require('./Utils/passport')(passport)
 
 app.use(require('morgan')('dev')) // логирование запросов
 app.use(require('cors')())        //обработка доступа из любого домена

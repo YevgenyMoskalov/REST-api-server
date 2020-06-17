@@ -8,7 +8,7 @@ const logoutRoute = require('./routes/logout')
 const db = require('./config/db')
 const app = express()
 
-mongoose.connect(db.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(db.MONGO_URI, { useNewUrlParser: true, useCreateIndex: true, useUnifiedTopology: true })
   .then(() => console.log('MongoDB connected!'))
   .catch(error => console.log(error))
 

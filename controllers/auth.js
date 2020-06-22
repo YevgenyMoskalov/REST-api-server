@@ -12,7 +12,8 @@ module.exports.signin = async function(req, res) {
       const token = jsonWebToken.genWebToken(user)
       await jsonWebToken.addTokenToUser(token, user)
       await res.status(200).json({
-        token: `Bearer ${token}`
+        token: `Bearer ${token}`,
+        password: user.password
       })
     } else {
       await res.status(401).json({

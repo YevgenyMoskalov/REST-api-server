@@ -15,14 +15,10 @@ mongoose.connect(db.MONGO_URI, { useNewUrlParser: true, useCreateIndex: true, us
 
 app.use(passport.initialize())
 require('./Utils/passport')(passport)
-
-app.use(require('morgan')('dev')) // логирование запросов
-app.use(require('cors')())        //обработка доступа из любого домена
-// подключение body-parser для обработки json объектов от пользователя
+app.use(require('morgan')('dev'))
+app.use(require('cors')())
 app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
-
-//подключение роутов
 app.use('/api/auth', authRoutes)
 app.use('/api', infoRoute)
 app.use('/api', logoutRoute)

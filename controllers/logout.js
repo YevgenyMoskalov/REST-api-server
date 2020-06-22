@@ -1,6 +1,3 @@
-const jsToken = require('jsonwebtoken')
-const jsonWebToken = require('../config/jwt')
-
 module.exports.logout = (req, res) => {
   if(req.query.all === null){
     res.status(422).json({
@@ -8,12 +5,6 @@ module.exports.logout = (req, res) => {
     })
   }
   const deletedToken = req.headers['authorization'].replace('Bearer ', '')
-  const decoded = jsToken.verify(deletedToken, jsonWebToken.SECRET_JWT);
-  if (!decoded) {
-    res.status(403).json({
-      message: 'token not verify'
-    })
-  }
   if(req.query.all === 'true'){
     //deleted all tokens
     req.user.removeTokens().then(() => {

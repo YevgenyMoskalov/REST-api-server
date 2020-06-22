@@ -3,16 +3,16 @@ const jsToken = require('jsonwebtoken')
 const User = require('../models/User')
 const jsonWebToken = require('../config/jwt')
 const TOKEN_LIFETIME = 10 * 60  //10 min
-const regexpEmail = /.+@.+\..+/;    //???
-const regexpPhone = /^\+?\d{12}$/;  //???
+const regexpEmail = /.+@.+\..+/;
+const regexpPhone = /^\+?\d{12}$/;
 
-//HTTP work codes from the site https://httpstatuses.com/
 module.exports.signin = async function(req, res) {
   const user = await User.findOne({id: req.body.id})
   if (user){
     const pasResult = bcrypt.compareSync(req.body.password, user.password)
     if (pasResult) {
       const token = genWebToken(user)
+      await addTokenToUser(token, user)
       res.status(200).json({
         token: `Bearer ${token}`
       })
@@ -45,16 +45,15 @@ module.exports.signup = async function(req, res) {
       })
 
       try {
-        await user.save()
         const token = genWebToken(user)
+        await addTokenToUser(token, user)
         res.status(201).json({
           token: `Bearer ${token}`
         })
-
       } catch (e) {
         // error 500 Internal Server Error
         res.status(500).json({
-          message: e.message ? e.message : e
+          message: e
         })
       }
     }
@@ -71,7 +70,10 @@ function isValidId(id) {
 }
 
 function genWebToken(user) {
-  return jsToken.sign({
-    id: user.id,
-  }, jsonWebToken.jwt, {expiresIn: TOKEN_LIFETIME})
+  return jsToken.sign({id: user.id,}, jsonWebToken.SECRET_JWT, {expiresIn: TOKEN_LIFETIME})
+}
+
+function addTokenToUser(token, user) {
+  user.tokens = user.tokens.concat({token})
+  user.save()
 }
